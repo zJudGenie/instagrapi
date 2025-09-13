@@ -463,9 +463,11 @@ class MediaMixin:
             "first": 50 if not amount or amount > 50 else amount,
             # These are Instagram restrictions, you can only specify <= 50
         }
-        variables["after"] = end_cursor
+        if end_cursor:
+            variables["after"] = end_cursor
+
         data = self.public_graphql_request(
-            variables, query_hash="e7e2f4da4b02303f74f0841279e52d76"
+            variables, doc_id=7950326061742207
         )
         page_info = json_value(
             data, "user", "edge_owner_to_timeline_media", "page_info", default={}

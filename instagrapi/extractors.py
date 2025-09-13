@@ -199,8 +199,11 @@ def extract_user_short(data):
 
 def extract_broadcast_channel(data):
     """ Extract broadcast channel infos """
-    channels = data["pinned_channels_info"]["pinned_channels_list"]
-    return [Broadcast(**channel) for channel in channels]
+    if data["pinned_channels_list_count"] > 0:
+        channels = data["pinned_channels_info"]["pinned_channels_list"]
+        return [Broadcast(**channel) for channel in channels]
+    else:
+        return []
 
 
 def extract_user_gql(data):

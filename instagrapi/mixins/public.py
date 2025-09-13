@@ -244,17 +244,21 @@ class PublicRequestMixin:
         variables,
         query_hash=None,
         query_id=None,
+        doc_id=None,
         data=None,
         params=None,
         headers=None,
     ):
-        assert query_id or query_hash, "Must provide valid one of: query_id, query_hash"
+        #assert query_id or query_hash, "Must provide valid one of: query_id, query_hash"
         default_params = {"variables": json.dumps(variables, separators=(",", ":"))}
-        if query_id:
-            default_params["query_id"] = query_id
+        #if query_id:
+        #    default_params["query_id"] = query_id
 
-        if query_hash:
-            default_params["query_hash"] = query_hash
+        #if query_hash:
+        #    default_params["query_hash"] = query_hash
+
+        if doc_id:
+            default_params["doc_id"] = doc_id
 
         if params:
             params.update(default_params)

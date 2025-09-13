@@ -33,7 +33,7 @@ class Resource(TypesBaseModel):
 
 
 class BioLink(TypesBaseModel):
-    link_id: str
+    link_id: Optional[str] = None
     url: str
     lynx_url: Optional[str] = None
     link_type: Optional[str] = None
@@ -173,7 +173,7 @@ class SharedMediaImageCandidate(TypesBaseModel):
 
     estimated_scans_sizes: List[int] = []
     height: int
-    scans_profile: str
+    scans_profile: Optional[str] = None
     url: str
     width: int
 
@@ -304,7 +304,7 @@ class ClipsIgArtist(TypesBaseModel):
     full_name: str
     is_private: bool = False
     is_verified: bool = False
-    profile_pic_id: str
+    profile_pic_id: Optional[str] = None
     profile_pic_url: str
     strong_id__: str
 
@@ -340,7 +340,7 @@ class ClipsOriginalSoundInfo(TypesBaseModel):
     previous_trend_rank: Optional[int] = None
     overlap_duration_in_ms: Optional[int] = None
     audio_asset_start_time_in_ms: Optional[int] = None
-    ig_artist: ClipsIgArtist
+    ig_artist: Optional[ClipsIgArtist]
     audio_filter_infos: List[dict] = []
     audio_parts: List[dict] = []
     audio_parts_by_filter: List[dict] = []
@@ -357,25 +357,25 @@ class ClipsMetadata(TypesBaseModel):
     is_public_chat_welcome_video: bool = False
     professional_clips_upsell_type: int = 0
     show_tips: Optional[str] = None
-    achievements_info: ClipsAchievementsInfo
-    additional_audio_info: ClipsAdditionalAudioInfo
+    achievements_info: Optional[ClipsAchievementsInfo]
+    additional_audio_info: Optional[ClipsAdditionalAudioInfo] = None
     asset_recommendation_info: Optional[dict] = None
-    audio_ranking_info: ClipsAudioRankingInfo
-    audio_type: str = "original_sounds"
+    audio_ranking_info: Optional[ClipsAudioRankingInfo] = None
+    audio_type: Optional[str] = "original_sounds"
     branded_content_tag_info: ClipsBrandedContentTagInfo
     breaking_content_info: Optional[dict] = None
     breaking_creator_info: Optional[dict] = None
     challenge_info: Optional[dict] = None
-    content_appreciation_info: ClipsContentAppreciationInfo
+    content_appreciation_info: Optional[ClipsContentAppreciationInfo] = None
     contextual_highlight_info: Optional[dict] = None
     cutout_sticker_info: List[dict] = []
-    disable_use_in_clips_client_cache: bool = False
+    disable_use_in_clips_client_cache: Optional[bool] = False
     external_media_info: Optional[dict] = None
-    is_fan_club_promo_video: bool = False
+    is_fan_club_promo_video: Optional[bool] = False
     is_shared_to_fb: bool = False
-    mashup_info: ClipsMashupInfo
+    mashup_info: Optional[ClipsMashupInfo] = None
     merchandising_pill_info: Optional[dict] = None
-    music_canonical_id: str
+    music_canonical_id: Optional[str] = None
     music_info: Optional[dict] = None
     nux_info: Optional[dict] = None
     original_sound_info: Optional[ClipsOriginalSoundInfo] = None
@@ -384,10 +384,47 @@ class ClipsMetadata(TypesBaseModel):
     reusable_text_attribute_string: Optional[str] = None
     reusable_text_info: Optional[dict] = None
     shopping_info: Optional[dict] = None
-    show_achievements: bool = False
+    show_achievements: Optional[bool] = False
     template_info: Optional[dict] = None
     may_have_template_info: Optional[dict] = None
     viewer_interaction_settings: Optional[dict] = None
+
+
+class FriendshipStatus(TypesBaseModel):
+    """Friendship status information for visual media user"""
+
+    blocking: bool = False
+    is_messaging_only_blocking: bool = False
+    is_messaging_pseudo_blocking: bool = False
+    is_unavailable: bool = False
+
+
+class VisualMediaUser(TypesBaseModel):
+    """User information in visual media (enhanced UserShort)"""
+
+    id: str
+    strong_id__: Optional[str] = None
+    pk: Optional[int] = None
+    pk_id: Optional[str] = None
+    full_name: Optional[str] = None
+    username: str
+    account_type: Optional[int] = None
+    short_name: Optional[str] = None
+    profile_pic_url: str
+    is_verified: bool = False
+    interop_messaging_user_fbid: Optional[int] = None
+    fbid_v2: Optional[int] = None
+    has_ig_profile: bool = True
+    interop_user_type: Optional[int] = 0
+    is_using_unified_inbox_for_direct: bool = False
+    is_private: bool = False
+    is_creator_agent_enabled: bool = False
+    is_creator_automated_response_enabled: bool = False
+    friendship_status: Optional[FriendshipStatus] = None
+    is_shared_account: bool = False
+    is_shared_account_with_messaging_access: bool = False
+    ai_agent_banner_type: Optional[str] = None
+    is_eligible_for_ai_bot_group_chats: bool = False
 
 
 class Media(TypesBaseModel):
@@ -410,6 +447,7 @@ class Media(TypesBaseModel):
     caption_text: str
     accessibility_caption: Optional[str] = None
     usertags: List[Usertag]
+    coauthor_producers: List[VisualMediaUser] = []
     sponsor_tags: List[UserShort]
     video_url: Optional[HttpUrl] = None  # for Video and IGTV
     view_count: Optional[int] = 0  # for Video and IGTV
@@ -716,43 +754,6 @@ class VideoVersion(TypesBaseModel):
     fallback: Optional[FallbackUrl] = None
     url_expiration_timestamp_us: Optional[datetime] = None
     bandwidth: Optional[int] = 0
-
-
-class FriendshipStatus(TypesBaseModel):
-    """Friendship status information for visual media user"""
-
-    blocking: bool = False
-    is_messaging_only_blocking: bool = False
-    is_messaging_pseudo_blocking: bool = False
-    is_unavailable: bool = False
-
-
-class VisualMediaUser(TypesBaseModel):
-    """User information in visual media (enhanced UserShort)"""
-
-    id: str
-    strong_id__: Optional[str] = None
-    pk: int
-    pk_id: str
-    full_name: str
-    username: str
-    account_type: Optional[int] = None
-    short_name: Optional[str] = None
-    profile_pic_url: str
-    is_verified: bool = False
-    interop_messaging_user_fbid: Optional[int] = None
-    fbid_v2: Optional[int] = None
-    has_ig_profile: bool = True
-    interop_user_type: Optional[int] = 0
-    is_using_unified_inbox_for_direct: bool = False
-    is_private: bool = False
-    is_creator_agent_enabled: bool = False
-    is_creator_automated_response_enabled: bool = False
-    friendship_status: Optional[FriendshipStatus] = None
-    is_shared_account: bool = False
-    is_shared_account_with_messaging_access: bool = False
-    ai_agent_banner_type: Optional[str] = None
-    is_eligible_for_ai_bot_group_chats: bool = False
 
 
 class ExpiringMediaActionSummary(TypesBaseModel):
