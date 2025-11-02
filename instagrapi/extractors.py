@@ -199,7 +199,7 @@ def extract_user_short(data):
 
 def extract_broadcast_channel(data):
     """ Extract broadcast channel infos """
-    if data["pinned_channels_list_count"] > 0:
+    if data["pinned_channels_info"]:
         channels = data["pinned_channels_info"]["pinned_channels_list"]
         return [Broadcast(**channel) for channel in channels]
     else:
@@ -556,7 +556,8 @@ def extract_story_gql(data):
 def extract_highlight_v1(data):
     highlight = deepcopy(data)
     highlight["pk"] = highlight["id"].split(":")[1]
-    highlight["items"] = [extract_story_v1(item) for item in highlight.get("items", [])]
+    highlight["items"] = [extract_story_v1(item) for item in
+                          highlight.get("items", [])]
     return Highlight(**highlight)
 
 
@@ -573,5 +574,6 @@ def extract_track(data):
     )
     items = re.findall(r"<BaseURL>(.+?)</BaseURL>", data["dash_manifest"])
     data["uri"] = html.unescape(items[0]) if items else None
-    data["territory_validity_periods"] = data.get("territory_validity_periods") or {}
+    data["territory_validity_periods"] = data.get(
+        "territory_validity_periods") or {}
     return Track(**data)
